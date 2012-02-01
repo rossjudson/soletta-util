@@ -179,6 +179,8 @@ public class LauncherTest {
 	        System.out.write(stdout.toByteArray());
 	        System.out.println("\nStderr:");
 	        System.out.write(stderr.toByteArray());
-    	}    	
+    	} else {
+    	    System.out.println("Skipping directory test when not on windows.");
+    	}
     }
 }
