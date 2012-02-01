@@ -1,34 +1,74 @@
 package com.soletta.seek.util;
 
-public class Tuple3<A,B,C> {
-    
+/**
+ * @author rjudson
+ * @version $Revision: 1.0 $
+ */
+public class Tuple3<A, B, C> {
+
     private final A a;
     private final B b;
     private final C c;
 
+    /**
+     * Constructor for Tuple3.
+     * 
+     * @param a
+     *            A
+     * @param b
+     *            B
+     * @param c
+     *            C
+     */
     public Tuple3(A a, B b, C c) {
         this.a = a;
         this.b = b;
         this.c = c;
     }
 
+    /**
+     * Method getA.
+     * 
+     * @return A
+     */
     public A getA() {
         return a;
     }
 
+    /**
+     * Method getB.
+     * 
+     * @return B
+     */
     public B getB() {
         return b;
     }
 
+    /**
+     * Method getC.
+     * 
+     * @return C
+     */
     public C getC() {
         return c;
     }
-    
-    public <D> Tuple4<A,B,C,D> extend(D d) {
+
+    /**
+     * Method extend.
+     * 
+     * @param d
+     *            D
+     * @return Tuple4<A,B,C,D>
+     */
+    public <D> Tuple4<A, B, C, D> extend(D d) {
         return Tuple.of(a, b, c, d);
     }
 
-
+    /**
+     * Method hashCode.
+     * 
+     * @return int
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -39,6 +79,13 @@ public class Tuple3<A,B,C> {
         return result;
     }
 
+    /**
+     * Method equals.
+     * 
+     * @param obj
+     *            Object
+     * @return boolean
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -66,6 +113,11 @@ public class Tuple3<A,B,C> {
         return true;
     }
 
+    /**
+     * Method toString.
+     * 
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -78,5 +130,5 @@ public class Tuple3<A,B,C> {
         builder.append("]");
         return builder.toString();
     }
-    
+
 }

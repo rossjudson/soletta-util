@@ -5,91 +5,102 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/** Attach this annotation to the getter methods of your JavaBean, if you need 
- * to refine the default behaviors.
+/**
+ * Attach this annotation to the getter methods of your JavaBean, if you need to refine the default behaviors.
  * 
  * @author rjudson
- *
+ * @version $Revision: 1.0 $
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
+@Target({ ElementType.METHOD })
 public @interface Arg {
-    
-    /** Specifies the name of this property, as an argument.
+
+    /**
+     * Specifies the name of this property, as an argument.
      * 
-     * @return
+     * @return String
      */
     String name() default "";
-    
-    /** Provide a description of this argument, for usage.
+
+    /**
+     * Provide a description of this argument, for usage.
      * 
-     * @return
+     * @return String
      */
     String description() default "";
-    
-    /** For any given option group, you can define a property with definesGroup set to
-     * true. That property is then a "meta-property", providing the description, long name,
-     * etc for each of the properties in its group. The defineGroup property <em>must</em>
-     * specify a character shortcut.
+
+    /**
+     * For any given option group, you can define a property with definesGroup set to true. That property is then a
+     * "meta-property", providing the description, long name, etc for each of the properties in its group. The
+     * defineGroup property <em>must</em> specify a character shortcut.
      * 
-     * @return
+     * @return boolean
      */
     boolean definesGroup() default false;
-    
-    /** Options are sometimes grouped together into two letter combinations, like -Tn and -Tk.
-     * Specifying a grouping character tells LibArgs to look for these. The character given
-     * here can match against a property that has definesGroup specified, in which case the 
-     * long name will be provied in dotted form.
+
+    /**
+     * Options are sometimes grouped together into two letter combinations, like -Tn and -Tk. Specifying a grouping
+     * character tells LibArgs to look for these. The character given here can match against a property that has
+     * definesGroup specified, in which case the long name will be provied in dotted form.
      * 
-     * @return
+     * @return String
      */
     String group() default "";
-    
-    /** Indicates the single character that should be an alias for this argument.
+
+    /**
+     * Indicates the single character that should be an alias for this argument.
      * 
-     * @return
+     * @return char
      */
-    char single() default (char)0;
-    
-    /** Specifies a required, positional argument.
+    char single() default (char) 0;
+
+    /**
+     * Specifies a required, positional argument.
      * 
-     * @return
+     * @return int
      */
     int pos() default -1;
-    
-    /** Indicates that this argument is required. This is useful for named arguments.
+
+    /**
+     * Indicates that this argument is required. This is useful for named arguments.
      * 
-     * @return
+     * @return boolean
      */
     boolean required() default false;
-    /** Indicates that this parameter gets the remaining arguments. The type should be a List of 
-     * something. 
+
+    /**
+     * Indicates that this parameter gets the remaining arguments. The type should be a List of something.
      * 
-     * @return
+     * @return boolean
      */
     boolean remaining() default false;
-    /** Specifies a class whose public static methods will be searched to find a way of
-     * creating an object from a string. 
-     * @return
+
+    /**
+     * Specifies a class whose public static methods will be searched to find a way of creating an object from a string.
+     * 
+     * @return Class<?>
      */
     Class<?> parseClass() default String.class;
-    /** Specifies the name of a static method on the parse class that will be called.
+
+    /**
+     * Specifies the name of a static method on the parse class that will be called.
      * 
-     * @return
+     * @return String
      */
     String parseMethod() default "";
-    
-    /** Specifies other names for a parameter.
+
+    /**
+     * Specifies other names for a parameter.
      * 
+     * @return String[]
      */
-    String [] aliases() default {};
-    
-    /** Hide this parameter from the usage explanation.
+    String[] aliases() default {};
+
+    /**
+     * Hide this parameter from the usage explanation.
      * 
+     * @return boolean
      */
     boolean hide() default false;
-    
-    
+
 }
-
-

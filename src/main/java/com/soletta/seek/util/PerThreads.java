@@ -6,35 +6,36 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/** A manager of multiple PerThreads, so it's easy to deal with a number of them.
+/**
+ * A manager of multiple PerThreads, so it's easy to deal with a number of them.
  * 
  * @author rjudson
- *
+ * @version $Revision: 1.0 $
  */
 public class PerThreads implements Closeable {
 
     private final ConcurrentMap<Class<?>, PerThread<?>> registry = new ConcurrentHashMap<Class<?>, PerThread<?>>();
     private final AtomicBoolean closed = new AtomicBoolean();
-    
+
     public PerThreads() {
-        
+
     }
 
-    /** Registers a per-thread helpe for the given type.
+    /**
+     * Registers a per-thread helpe for the given type.
      * 
-     * @param <T>
      * @param type
      * @param perThread
      */
     public <T> void register(Class<T> type, PerThread<T> perThread) {
         registry.put(type, perThread);
     }
-    
-    /** Retrieves the per-thread instance of the given type.
+
+    /**
+     * Retrieves the per-thread instance of the given type.
      * 
-     * @param <T>
      * @param type
-     * @return
+     * @return T
      */
     public <T> T get(Class<T> type) {
         @SuppressWarnings("unchecked")
@@ -42,9 +43,9 @@ public class PerThreads implements Closeable {
         return pt.get();
     }
 
-    /** Dispose of the current thread's value for the given type.
+    /**
+     * Dispose of the current thread's value for the given type.
      * 
-     * @param <T>
      * @param type
      */
     public <T> void dispose(Class<T> type) {
@@ -52,17 +53,22 @@ public class PerThreads implements Closeable {
         PerThread<T> pt = (PerThread<T>) registry.get(type);
         pt.dispose();
     }
-    
+
+    /**
+     * Method close.
+     * 
+     * @throws IOException
+     * 
+     @see java.io.Closeable#close()
+     */
     @Override
     public void close() throws IOException {
         if (closed.compareAndSet(false, true)) {
-            for (PerThread<?> pt: registry.values()) {
+            for (PerThread<?> pt : registry.values()) {
                 pt.close();
             }
             registry.clear();
         }
     }
-    
-    
-    
+
 }

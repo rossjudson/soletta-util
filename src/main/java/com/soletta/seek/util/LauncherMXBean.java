@@ -3,20 +3,60 @@ package com.soletta.seek.util;
 import java.io.IOException;
 import java.util.concurrent.Future;
 
+/**
+ * @author rjudson
+ * @version $Revision: 1.0 $
+ */
 public interface LauncherMXBean {
 
-	public abstract boolean isDone();
+    /**
+     * Method isDone.
+     * 
+     * @return boolean
+     */
+    public abstract boolean isDone();
 
-	public abstract Future<Integer> launch() throws IOException;
+    /**
+     * Method launch.
+     * 
+     * @return Future<Integer> * @throws IOException
+     */
+    public abstract Future<Integer> launch() throws IOException;
 
-	public abstract void setRedirectErrorStream(boolean redirectErrorStream);
+    /**
+     * Method setRedirectErrorStream.
+     * 
+     * @param redirectErrorStream
+     *            boolean
+     */
+    public abstract void setRedirectErrorStream(boolean redirectErrorStream);
 
-	public abstract boolean isRedirectErrorStream();
+    /**
+     * Method isRedirectErrorStream.
+     * 
+     * @return boolean
+     */
+    public abstract boolean isRedirectErrorStream();
 
-	public abstract long getErrBytes();
+    /**
+     * Method getErrBytes.
+     * 
+     * @return long
+     */
+    public abstract long getErrBytes();
 
-	public abstract long getOutBytes();
+    /**
+     * Method getOutBytes.
+     * 
+     * @return long
+     */
+    public abstract long getOutBytes();
 
-	public abstract long getInBytes();
+    /**
+     * Method getInBytes.
+     * 
+     * @return long
+     */
+    public abstract long getInBytes();
 
 }

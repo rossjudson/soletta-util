@@ -1,13 +1,31 @@
 package com.soletta.seek.util;
 
-public class Tuple5<A,B,C,D,E> {
-    
+/**
+ * @author rjudson
+ * @version $Revision: 1.0 $
+ */
+public class Tuple5<A, B, C, D, E> {
+
     private final A a;
     private final B b;
     private final C c;
     private final D d;
     private final E e;
-    
+
+    /**
+     * Constructor for Tuple5.
+     * 
+     * @param a
+     *            A
+     * @param b
+     *            B
+     * @param c
+     *            C
+     * @param d
+     *            D
+     * @param e
+     *            E
+     */
     public Tuple5(A a, B b, C c, D d, E e) {
         this.a = a;
         this.b = b;
@@ -16,26 +34,56 @@ public class Tuple5<A,B,C,D,E> {
         this.e = e;
     }
 
+    /**
+     * Method getA.
+     * 
+     * @return A
+     */
     public A getA() {
         return a;
     }
 
+    /**
+     * Method getB.
+     * 
+     * @return B
+     */
     public B getB() {
         return b;
     }
 
+    /**
+     * Method getC.
+     * 
+     * @return C
+     */
     public C getC() {
         return c;
     }
 
+    /**
+     * Method getD.
+     * 
+     * @return D
+     */
     public D getD() {
         return d;
     }
 
+    /**
+     * Method getE.
+     * 
+     * @return E
+     */
     public E getE() {
         return e;
     }
 
+    /**
+     * Method hashCode.
+     * 
+     * @return int
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -48,6 +96,13 @@ public class Tuple5<A,B,C,D,E> {
         return result;
     }
 
+    /**
+     * Method equals.
+     * 
+     * @param obj
+     *            Object
+     * @return boolean
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -85,6 +140,11 @@ public class Tuple5<A,B,C,D,E> {
         return true;
     }
 
+    /**
+     * Method toString.
+     * 
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -101,7 +161,5 @@ public class Tuple5<A,B,C,D,E> {
         builder.append("]");
         return builder.toString();
     }
-    
-    
-    
+
 }

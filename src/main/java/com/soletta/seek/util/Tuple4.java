@@ -1,12 +1,28 @@
 package com.soletta.seek.util;
 
-public class Tuple4<A,B,C,D> {
+/**
+ * @author rjudson
+ * @version $Revision: 1.0 $
+ */
+public class Tuple4<A, B, C, D> {
 
     private final A a;
     private final B b;
     private final C c;
     private final D d;
 
+    /**
+     * Constructor for Tuple4.
+     * 
+     * @param a
+     *            A
+     * @param b
+     *            B
+     * @param c
+     *            C
+     * @param d
+     *            D
+     */
     public Tuple4(A a, B b, C c, D d) {
         this.a = a;
         this.b = b;
@@ -14,26 +30,58 @@ public class Tuple4<A,B,C,D> {
         this.d = d;
     }
 
+    /**
+     * Method getA.
+     * 
+     * @return A
+     */
     public A getA() {
         return a;
     }
 
+    /**
+     * Method getB.
+     * 
+     * @return B
+     */
     public B getB() {
         return b;
     }
 
+    /**
+     * Method getC.
+     * 
+     * @return C
+     */
     public C getC() {
         return c;
     }
 
+    /**
+     * Method getD.
+     * 
+     * @return D
+     */
     public D getD() {
         return d;
     }
-    
-    public <E> Tuple5<A,B,C,D,E> extend(E e) {
+
+    /**
+     * Method extend.
+     * 
+     * @param e
+     *            E
+     * @return Tuple5<A,B,C,D,E>
+     */
+    public <E> Tuple5<A, B, C, D, E> extend(E e) {
         return Tuple.of(a, b, c, d, e);
     }
 
+    /**
+     * Method hashCode.
+     * 
+     * @return int
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -45,6 +93,13 @@ public class Tuple4<A,B,C,D> {
         return result;
     }
 
+    /**
+     * Method equals.
+     * 
+     * @param obj
+     *            Object
+     * @return boolean
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -77,6 +132,11 @@ public class Tuple4<A,B,C,D> {
         return true;
     }
 
+    /**
+     * Method toString.
+     * 
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

@@ -24,6 +24,10 @@ import javax.management.ObjectName;
 import javax.management.StandardEmitterMBean;
 import javax.management.StandardMBean;
 
+/**
+ * @author rjudson
+ * @version $Revision: 1.0 $
+ */
 public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integer> {
 
     protected Logger logger;
@@ -48,110 +52,194 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
 
     }
 
+    /**
+     * Constructor for Launcher.
+     * 
+     * @param args
+     *            String[]
+     */
     public Launcher(String... args) {
         this.args = args;
     }
 
+    /**
+     * Method toString.
+     * 
+     * @return String
+     */
     public String toString() {
         return "Launcher " + args;
     }
 
+    /**
+     * Method getInBytes.
+     * 
+     * @return long
+     * @see com.soletta.seek.util.LauncherMXBean#getInBytes()
+     */
     @Override
     public long getInBytes() {
         return inBytes.get();
     }
 
+    /**
+     * Method getOutBytes.
+     * 
+     * @return long
+     * @see com.soletta.seek.util.LauncherMXBean#getOutBytes()
+     */
     @Override
     public long getOutBytes() {
         return outBytes.get();
     }
 
+    /**
+     * Method getErrBytes.
+     * 
+     * @return long
+     * @see com.soletta.seek.util.LauncherMXBean#getErrBytes()
+     */
     @Override
     public long getErrBytes() {
         return errBytes.get();
     }
 
+    /**
+     * Method getStdout.
+     * 
+     * @return OutputStream
+     */
     public OutputStream getStdout() {
         return stdout;
     }
 
+    /**
+     * Method setStdout.
+     * 
+     * @param stdout
+     *            OutputStream
+     */
     public void setStdout(OutputStream stdout) {
         this.stdout = stdout;
     }
 
+    /**
+     * Method getStderr.
+     * 
+     * @return OutputStream
+     */
     public OutputStream getStderr() {
         return stderr;
     }
 
+    /**
+     * Method setStderr.
+     * 
+     * @param stderr
+     *            OutputStream
+     */
     public void setStderr(OutputStream stderr) {
         this.stderr = stderr;
     }
 
+    /**
+     * Method getStdin.
+     * 
+     * @return InputStream
+     */
     public InputStream getStdin() {
         return stdin;
     }
 
+    /**
+     * Method setStdin.
+     * 
+     * @param stdin
+     *            InputStream
+     */
     public void setStdin(InputStream stdin) {
         this.stdin = stdin;
     }
 
+    /**
+     * Method getThreadFactory.
+     * 
+     * @return ThreadFactory
+     */
     public ThreadFactory getThreadFactory() {
         return threadFactory;
     }
 
+    /**
+     * Method setThreadFactory.
+     * 
+     * @param threadFactory
+     *            ThreadFactory
+     */
     public void setThreadFactory(ThreadFactory threadFactory) {
         this.threadFactory = threadFactory;
     }
 
+    /**
+     * Method isRedirectErrorStream.
+     * 
+     * @return boolean * @see com.soletta.seek.util.LauncherMXBean#isRedirectErrorStream()
+     */
     @Override
     public boolean isRedirectErrorStream() {
         return redirectErrorStream;
     }
 
+    /**
+     * Method setRedirectErrorStream.
+     * 
+     * @param redirectErrorStream
+     *            boolean
+     * 
+     @see com.soletta.seek.util.LauncherMXBean#setRedirectErrorStream(boolean)
+     */
     @Override
     public void setRedirectErrorStream(boolean redirectErrorStream) {
         this.redirectErrorStream = redirectErrorStream;
     }
 
-//    /**
-//     * Attempts to kill the child process, if it is running.
-//     * 
-//     */
-//    @Override
-//    public void destroy() {
-//        Process p = process.get();
-//        if (p != null) {
-//            p.destroy();
-//            // Let anything waiting for us know that we're done.
-//            setException(new InterruptedException("Child process destroyed"));
-//        }
-//    }
-
+    /**
+     * Method addArgs.
+     * 
+     * @param command
+     *            List<String>
+     * @param argArray
+     *            String[]
+     */
     protected void addArgs(List<String> command, String... argArray) {
         if (argArray != null)
             for (String arg : argArray)
                 command.add(arg);
     }
 
-//    @Override
-//    public Integer call() throws InterruptedException, ExecutionException {
-//        if (process.get() == null)
-//            try {
-//                launch();
-//            } catch (IOException ioe) {
-//                throw new ExecutionException(ioe);
-//            }
-//        try {
-//            return result.get();
-//        } catch (InterruptedException e) {
-//            if (logger != null)
-//                logger.log(Level.FINE, "Exception from launched process", e);
-//            throw e;
-//        } finally {
-//            // cleanup of the process, etc?
-//        }
-//    }
+    // @Override
+    // public Integer call() throws InterruptedException, ExecutionException {
+    // if (process.get() == null)
+    // try {
+    // launch();
+    // } catch (IOException ioe) {
+    // throw new ExecutionException(ioe);
+    // }
+    // try {
+    // return result.get();
+    // } catch (InterruptedException e) {
+    // if (logger != null)
+    // logger.log(Level.FINE, "Exception from launched process", e);
+    // throw e;
+    // } finally {
+    // // cleanup of the process, etc?
+    // }
+    // }
 
+    /**
+     * @author rjudson
+     * @version $Revision: 1.0 $
+     */
     protected class Pump implements Runnable {
 
         private final InputStream in;
@@ -159,10 +247,32 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
         private final boolean monitor;
         private final AtomicLong counter;
 
+        /**
+         * Constructor for Pump.
+         * 
+         * @param monitor
+         *            boolean
+         * @param in
+         *            InputStream
+         * @param counter
+         *            AtomicLong
+         */
         Pump(boolean monitor, InputStream in, AtomicLong counter) {
             this(monitor, in, null, counter);
         }
 
+        /**
+         * Constructor for Pump.
+         * 
+         * @param monitor
+         *            boolean
+         * @param in
+         *            InputStream
+         * @param out
+         *            OutputStream
+         * @param counter
+         *            AtomicLong
+         */
         Pump(boolean monitor, InputStream in, OutputStream out, AtomicLong counter) {
             assert in != null;
             this.monitor = monitor;
@@ -171,6 +281,11 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
             this.counter = counter;
         }
 
+        /**
+         * Method run.
+         * 
+         * @see java.lang.Runnable#run()
+         */
         @Override
         public void run() {
 
@@ -223,6 +338,11 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
 
     }
 
+    /**
+     * Method launch.
+     * 
+     * @return Future<Integer> * @throws IOException * @see com.soletta.seek.util.LauncherMXBean#launch()
+     */
     @Override
     synchronized public Future<Integer> launch() throws IOException {
         if (process.get() == null) {
@@ -233,9 +353,22 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
         return this;
     }
 
+    /**
+     * Method assembleCommand.
+     * 
+     * @param command
+     *            List<String>
+     */
     protected void assembleCommand(List<String> command) {
     }
 
+    /**
+     * Method addArgsAndExecute.
+     * 
+     * @param command
+     *            List<String>
+     * @throws IOException
+     */
     protected void addArgsAndExecute(List<String> command) throws IOException {
         addArgs(command, args);
         ProcessBuilder processBuilder = new ProcessBuilder(command);
@@ -259,14 +392,18 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
         }
     }
 
+    /**
+     * Method getObjectName.
+     * 
+     * @return ObjectName
+     */
     public ObjectName getObjectName() {
         return objectName;
     }
 
     /**
-     * If you set an ObjectName, the JVMLauncher will register itself under that
-     * ObjectName with the platform JMX server. You'll be able to see some
-     * statistics about the launcher.
+     * If you set an ObjectName, the JVMLauncher will register itself under that ObjectName with the platform JMX
+     * server. You'll be able to see some statistics about the launcher.
      * 
      * @param objectName
      */
@@ -283,6 +420,11 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
         }
     }
 
+    /**
+     * Method createMBean.
+     * 
+     * @return StandardEmitterMBean
+     */
     protected StandardEmitterMBean createMBean() {
         return new StandardEmitterMBean(this, LauncherMXBean.class, true, new NotificationBroadcasterSupport());
     }
@@ -291,6 +433,14 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
     AtomicReference<GetThread> getThread = new AtomicReference<GetThread>();
     AtomicReference<InterruptedException> exception = new AtomicReference<InterruptedException>();
 
+    /**
+     * Method cancel.
+     * 
+     * @param mayInterruptIfRunning
+     *            boolean
+     * @return boolean
+     * @see java.util.concurrent.Future#cancel(boolean)
+     */
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
         Process p = process.get();
@@ -313,11 +463,23 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
         }
     }
 
+    /**
+     * Method isCancelled.
+     * 
+     * @return boolean
+     * @see java.util.concurrent.Future#isCancelled()
+     */
     @Override
     public boolean isCancelled() {
         return cancelled.get();
     }
 
+    /**
+     * Method isDone.
+     * 
+     * @return boolean
+     * @see java.util.concurrent.Future#isDone()
+     */
     @Override
     public boolean isDone() {
         try {
@@ -329,10 +491,22 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
         }
     }
 
+    /**
+     * Method setException.
+     * 
+     * @param ie
+     *            InterruptedException
+     */
     public void setException(InterruptedException ie) {
         exception.set(ie);
     }
 
+    /**
+     * Method get.
+     * 
+     * @return Integer * @throws InterruptedException * @throws ExecutionException
+     * @see java.util.concurrent.Future#get()
+     */
     @Override
     public Integer get() throws InterruptedException, ExecutionException {
         InterruptedException ex = exception.get();
@@ -347,6 +521,16 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
         return p.waitFor();
     }
 
+    /**
+     * Method get.
+     * 
+     * @param timeout
+     *            long
+     * @param unit
+     *            TimeUnit
+     * @return Integer * @throws InterruptedException * @throws TimeoutException * @throws ExecutionException * @see
+     *         java.util.concurrent.Future#get(long, TimeUnit)
+     */
     @Override
     public Integer get(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException, ExecutionException {
         GetThread gt = getThread();
@@ -354,6 +538,11 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
         return get();
     }
 
+    /**
+     * Method getThread.
+     * 
+     * @return GetThread
+     */
     private GetThread getThread() {
         GetThread gt = getThread.get();
         if (gt == null) {
@@ -365,25 +554,33 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
     }
 
     /**
-     * GetThread is started if someone calls get(timeout). Since we can't do a
-     * timed-out waitFor on a process, we can start a second thread that will do
-     * the waitFor, for us.
-     * 
-     * Rather than attempt to cancel this if the original get(timeout) request
-     * lapses, we'll just let it sit there and lapse on its own.
+     * GetThread is started if someone calls get(timeout). Since we can't do a timed-out waitFor on a process, we can
+     * start a second thread that will do the waitFor, for us. Rather than attempt to cancel this if the original
+     * get(timeout) request lapses, we'll just let it sit there and lapse on its own.
      * 
      * @author rjudson
-     * 
+     * @version $Revision: 1.0 $
      */
     static class GetThread extends Thread {
         private final Process p;
 
+        /**
+         * Constructor for GetThread.
+         * 
+         * @param p
+         *            Process
+         */
         GetThread(Process p) {
             super("Launcher.GetThread");
             this.p = p;
             setDaemon(true);
         }
 
+        /**
+         * Method run.
+         * 
+         * @see java.lang.Runnable#run()
+         */
         public void run() {
             try {
                 p.waitFor();
@@ -393,6 +590,12 @@ public class Launcher implements Future<Integer>, LauncherMXBean, Callable<Integ
         }
     }
 
+    /**
+     * Method call.
+     * 
+     * @return Integer * @throws InterruptedException * @throws ExecutionException
+     * @see java.util.concurrent.Callable#call()
+     */
     @Override
     public Integer call() throws InterruptedException, ExecutionException {
         return get();

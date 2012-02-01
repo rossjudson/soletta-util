@@ -14,77 +14,95 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Memoizer, from the Goetz book. The default structure used to hold the cache values
- * is a ConcurrentHashMap. 
+ * Memoizer, from the Goetz book. The default structure used to hold the cache values is a ConcurrentHashMap.
  * 
- * @param <A>
- * @param <V>
+ * @author rjudson
+ * @version $Revision: 1.0 $
  */
 public class Memoizer<A, V> implements Computable<A, V>, Iterable<Map.Entry<A, V>> {
     private final ConcurrentMap<A, Future<V>> cache;
     private final Computable<A, V> func;
 
-    /** Construct a Memoizer that requires a Computable to be supplied on each
-     * call to compute.
-     * 
+    /**
+     * Construct a Memoizer that requires a Computable to be supplied on each call to compute.
      */
     public Memoizer() {
         this(new ConcurrentHashMap<A, Future<V>>());
     }
-    
-    /** Construct a Memoizer that uses the given Computable, to create the values in its
-     * cache.
+
+    /**
+     * Construct a Memoizer that uses the given Computable, to create the values in its cache.
      * 
-     * @param func The computable that can be used to calculate the values in the Memoizer.
+     * @param func
+     *            The computable that can be used to calculate the values in the Memoizer.
      */
-    public Memoizer(Computable<A,V> func) {
+    public Memoizer(Computable<A, V> func) {
         this(new ConcurrentHashMap<A, Future<V>>(), func);
     }
-    
+
+    /**
+     * Constructor for Memoizer.
+     * 
+     * @param map
+     *            ConcurrentMap<A,Future<V>>
+     * @param func
+     *            Computable<A,V>
+     */
     public Memoizer(ConcurrentMap<A, Future<V>> map, Computable<A, V> func) {
         this.func = func;
         this.cache = map;
     }
 
-    /** Construct a Memoizer that requires a Computable to be supplied on each
-     * call to compute, and uses the given ConcurrentMap as a cache structure.
+    /**
+     * Construct a Memoizer that requires a Computable to be supplied on each call to compute, and uses the given
+     * ConcurrentMap as a cache structure.
      * 
+     * @param map
+     *            ConcurrentMap<A,Future<V>>
      */
     public Memoizer(ConcurrentMap<A, Future<V>> map) {
         func = null;
         cache = map;
     }
-    
-    public Computable<A,V> getFunc() {
+
+    /**
+     * Method getFunc.
+     * 
+     * @return Computable<A,V>
+     */
+    public Computable<A, V> getFunc() {
         return func;
     }
-    
-    /** Subclasses can decide, on a per-object basis, if the given object can
-     * be cached. The default is to cache (true).
+
+    /**
+     * Subclasses can decide, on a per-object basis, if the given object can be cached. The default is to cache (true).
      * 
      * @param v
-     * @return
+     * @return boolean
      */
     protected boolean shouldCache(V v) {
         return true;
     }
 
-    /** Request computation of the value, in a thread-safe and thread-sharing way,
-     * of the argument presented.
+    /**
+     * Request computation of the value, in a thread-safe and thread-sharing way, of the argument presented.
      * 
+     * @param arg
+     *            A
+     * @return V * @throws InterruptedException * @throws ExecutionException * @see
+     *         com.soletta.seek.util.Computable#compute(A)
      */
     public V compute(A arg) throws InterruptedException, ExecutionException {
         return compute(func, arg);
     }
 
-    /** Request computation of the value, in a thread-safe and thread-sharing way,
-     * of the argument presented, with the Computable presented.
+    /**
+     * Request computation of the value, in a thread-safe and thread-sharing way, of the argument presented, with the
+     * Computable presented.
      * 
      * @param c
      * @param arg
-     * @return
-     * @throws InterruptedException
-     * @throws ExecutionException
+     * @return V * @throws InterruptedException * @throws ExecutionException * @throws ExecutionException
      */
     public V compute(final Computable<A, V> c, final A arg) throws InterruptedException, ExecutionException {
         while (true) {
@@ -113,8 +131,8 @@ public class Memoizer<A, V> implements Computable<A, V>, Iterable<Map.Entry<A, V
         }
     }
 
-    /** Add the given value to the cache, so it won't need to be computed if it 
-     * is requested.
+    /**
+     * Add the given value to the cache, so it won't need to be computed if it is requested.
      * 
      * @param a
      * @param v
@@ -143,7 +161,8 @@ public class Memoizer<A, V> implements Computable<A, V>, Iterable<Map.Entry<A, V
         });
     }
 
-    /** Remove the given value from the cache, if it exists.
+    /**
+     * Remove the given value from the cache, if it exists.
      * 
      * @param a
      */
@@ -151,33 +170,37 @@ public class Memoizer<A, V> implements Computable<A, V>, Iterable<Map.Entry<A, V
         cache.remove(a);
     }
 
-    /** Clear the cache.
-     * 
+    /**
+     * Clear the cache.
      */
     public void clear() {
         cache.clear();
     }
-    
-    /** Return the number of entries in the cache.
+
+    /**
+     * Return the number of entries in the cache.
      * 
-     * @return
+     * @return int
      */
     public int size() {
         return cache.size();
     }
-    
-    /** Subclasses can look at the cache structure.
+
+    /**
+     * Subclasses can look at the cache structure.
      * 
-     * @return
+     * @return ConcurrentMap<A,Future<V>>
      */
     protected ConcurrentMap<A, Future<V>> getCache() {
         return cache;
     }
 
-    /** Return an iterator across the cache. The iterator gets the values
-     * for each entry returned, so it can potentially block if a given
-     * value is still being computed.
+    /**
+     * Return an iterator across the cache. The iterator gets the values for each entry returned, so it can potentially
+     * block if a given value is still being computed.
      * 
+     * @return Iterator<Entry<A,V>>
+     * @see java.lang.Iterable#iterator()
      */
     public Iterator<Entry<A, V>> iterator() {
 

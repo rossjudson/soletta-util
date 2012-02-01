@@ -13,21 +13,24 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * @author rjudson
+ * @version $Revision: 1.0 $
+ */
 public class LibStream {
 
     static ExecutorService exec = Executors.newCachedThreadPool(Threads.groupedThreadFactory("LibStream"));
-    
-    /** Copy everything from in to out in an efficient way, possibly multi-threaded,
-     * without closing the streams.
+
+    /**
+     * Copy everything from in to out in an efficient way, possibly multi-threaded, without closing the streams.
      * 
      * @param in
      * @param out
-     * @return
-     * @throws IOException 
+     * @return long * @throws IOException
      */
     public static long cat1(InputStream in, OutputStream out) throws IOException {
         long count = 0;
-        byte [] buffer = new byte[16 * 1024];
+        byte[] buffer = new byte[16 * 1024];
         int read = in.read(buffer);
         while (read >= 0) {
             count += read;
@@ -36,21 +39,30 @@ public class LibStream {
         }
         return count;
     }
-    
+
+    /**
+     * Method cat2.
+     * 
+     * @param in
+     *            InputStream
+     * @param out
+     *            OutputStream
+     * @return long * @throws IOException
+     */
     public static long cat2(InputStream in, OutputStream out) throws IOException {
-        
+
         long ioTimeout = Long.getLong("LibStream.IOTimeoutMillis", 30000);
         Reader r = new Reader(in, ioTimeout);
         Buffer buffer = new Buffer();
         Future<Long> future = exec.submit(r);
-        
+
         try {
             do {
                 buffer = r.exchange(buffer, ioTimeout, TimeUnit.MILLISECONDS);
-                if (buffer != null) 
+                if (buffer != null)
                     out.write(buffer.bytes, 0, buffer.length);
             } while (buffer != null);
-            
+
         } catch (InterruptedException e) {
             throw new InterruptedIOException();
         } catch (TimeoutException e) {
@@ -72,11 +84,11 @@ public class LibStream {
             if (c instanceof InterruptedException)
                 throw new InterruptedIOException();
             else if (c instanceof Error) {
-                throw (Error)c;
+                throw (Error) c;
             } else if (c instanceof RuntimeException) {
-                throw (RuntimeException)c;
+                throw (RuntimeException) c;
             } else if (c instanceof IOException) {
-                throw (IOException)c;
+                throw (IOException) c;
             } else if (c instanceof TimeoutException) {
                 throw new IOException("Reader stalled", c);
             } else {
@@ -84,17 +96,35 @@ public class LibStream {
             }
         }
     }
-    
+
+    /**
+     * @author rjudson
+     * @version $Revision: 1.0 $
+     */
     static final class Reader extends Exchanger<Buffer> implements Callable<Long> {
-        
+
         private InputStream input;
         private Buffer buffer = new Buffer();
         private final long ioTimeout;
-        
+
+        /**
+         * Constructor for Reader.
+         * 
+         * @param input
+         *            InputStream
+         * @param ioTimeout
+         *            long
+         */
         Reader(InputStream input, long ioTimeout) {
             this.input = input;
             this.ioTimeout = ioTimeout;
         }
+
+        /**
+         * Method call.
+         * 
+         * @return Long * @throws Exception * @see java.util.concurrent.Callable#call()
+         */
         @Override
         public Long call() throws Exception {
             long count = 0;
@@ -102,8 +132,10 @@ public class LibStream {
                 buffer.length = input.read(buffer.bytes);
                 while (buffer.length >= 0) {
                     count += buffer.length;
-                    // note that exchange gives us a happens-before, so we are free to
-                    // look at the variables of the buffer object without additional
+                    // note that exchange gives us a happens-before, so we are
+                    // free to
+                    // look at the variables of the buffer object without
+                    // additional
                     // synchronization
                     buffer = exchange(buffer, ioTimeout, TimeUnit.MILLISECONDS);
                     if (buffer == null)
@@ -119,12 +151,16 @@ public class LibStream {
                 input = null;
             }
         }
-        
+
     }
-    
+
+    /**
+     * @author rjudson
+     * @version $Revision: 1.0 $
+     */
     static class Buffer {
-        final byte [] bytes = new byte[16 * 1024];
+        final byte[] bytes = new byte[16 * 1024];
         int length;
     }
-    
+
 }

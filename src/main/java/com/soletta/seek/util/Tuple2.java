@@ -1,27 +1,61 @@
 package com.soletta.seek.util;
 
-public class Tuple2<A,B> {
-    
+/**
+ * @author rjudson
+ * @version $Revision: 1.0 $
+ */
+public class Tuple2<A, B> {
+
     private final A a;
     private final B b;
-    
+
+    /**
+     * Constructor for Tuple2.
+     * 
+     * @param a
+     *            A
+     * @param b
+     *            B
+     */
     public Tuple2(A a, B b) {
         this.a = a;
         this.b = b;
     }
 
+    /**
+     * Method getA.
+     * 
+     * @return A
+     */
     public A getA() {
         return a;
     }
 
+    /**
+     * Method getB.
+     * 
+     * @return B
+     */
     public B getB() {
         return b;
     }
-    
-    public <C> Tuple3<A,B,C> extend(C c) {
+
+    /**
+     * Method extend.
+     * 
+     * @param c
+     *            C
+     * @return Tuple3<A,B,C>
+     */
+    public <C> Tuple3<A, B, C> extend(C c) {
         return Tuple.of(a, b, c);
     }
 
+    /**
+     * Method hashCode.
+     * 
+     * @return int
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -31,6 +65,13 @@ public class Tuple2<A,B> {
         return result;
     }
 
+    /**
+     * Method equals.
+     * 
+     * @param obj
+     *            Object
+     * @return boolean
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -53,6 +94,11 @@ public class Tuple2<A,B> {
         return true;
     }
 
+    /**
+     * Method toString.
+     * 
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
