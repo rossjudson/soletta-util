@@ -7,8 +7,6 @@ public interface LauncherMXBean {
 
 	public abstract boolean isDone();
 
-	public abstract void destroy();
-
 	public abstract Future<Integer> launch() throws IOException;
 
 	public abstract void setRedirectErrorStream(boolean redirectErrorStream);

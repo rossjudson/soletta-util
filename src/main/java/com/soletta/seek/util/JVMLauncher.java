@@ -76,7 +76,7 @@ public class JVMLauncher extends Launcher implements JVMLauncherMXBean {
 	 * 
 	 */
 	@Override
-	public synchronized Future<Integer> launch() throws IOException {
+	synchronized public Future<Integer> launch() throws IOException {
 		if (process.get() == null) {
 
 			// The class to be run can be set directly, or by providing its
@@ -102,7 +102,7 @@ public class JVMLauncher extends Launcher implements JVMLauncherMXBean {
 			}
 		}
 
-		return result;
+		return this;
 	}
 	
 	@Override

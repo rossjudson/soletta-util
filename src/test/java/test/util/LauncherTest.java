@@ -108,7 +108,7 @@ public class LauncherTest {
         assertTrue(result == 0);
     }
     
-    @Test(expected=ExecutionException.class)
+    @Test(expected=InterruptedException.class)
     public void delayThenDestroy() throws Exception {
         JVMLauncher launch = new JVMLauncher(LauncherTest.class);
         launch.setStdout(System.out);
@@ -125,11 +125,21 @@ public class LauncherTest {
             throw new RuntimeException();
         }
         System.out.println("Test is destroying child process");
-        launch.destroy();
-        System.out.println("Test is waiting for exit code; should not receive it. ExecutionException should be thrown.");
+        launch.cancel(true);
+        System.out.println("Test is waiting for exit code; should not receive it. InterruptedException should be thrown.");
         Integer exitCode = launch.call();
         
         Assert.fail("Shouldn't reach this point -- process wasn't interrupted. Exit code is " + exitCode);
+    }
+    
+    @Test
+    public void launchBadClass() throws InterruptedException, ExecutionException {
+        // We can't really tell the difference between a bad class name and a process
+        // that returns a non-zero exit code, so we don't try too hard.
+        JVMLauncher launch = new JVMLauncher("class.not.present");
+        launch.setStdout(System.out);
+        launch.setStderr(System.err);
+        Assert.assertTrue("Exit code should be non-zero", !launch.get().equals(0));
     }
     
     @Test
