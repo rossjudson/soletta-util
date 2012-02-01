@@ -6,5 +6,6 @@ Various classes that make life easier under Java.
 
 #Usage
 
-TODO!
+TODO! This library is in-progress.
+
 
