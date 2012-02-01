@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>seek-components</artifactId>
+		<groupId>com.soletta.seek</groupId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>seek-components-util</artifactId>
+	<name>Seek :: Components :: Utilities</name>
+	<description>Server-side utility libraries.</description>
+	<dependencies>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.google.guava</groupId> -->
+<!-- 			<artifactId>guava</artifactId> -->
+<!-- 		</dependency> -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<!-- The DataNucleus enhancer seems to conflict with JDK 7's JAXB; there 
+						are "stackframe" errors when building simple contexts. Forcing compilation 
+						to JDK 1.6 targets seems to fix the problem. -->
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
