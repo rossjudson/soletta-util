@@ -6,9 +6,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 /** Helper methods for handling threads and thread groups.
  * 
@@ -17,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Threads {
 
-    static final Logger log = LoggerFactory.getLogger(Threads.class.getName());
+    static final Logger log = Logger.getLogger(Threads.class.getName());
     static ExecutorService monitorExec = Executors.newCachedThreadPool(groupedThreadFactory("thread monitors"));
     
     private Threads() {}

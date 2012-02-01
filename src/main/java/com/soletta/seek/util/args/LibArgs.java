@@ -17,9 +17,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Uses introspection to figure out the command line switches and arguments.
@@ -125,7 +124,7 @@ public static class SimpleConfig {
  */
 public class LibArgs {
 
-    final static Logger log = LoggerFactory.getLogger(LibArgs.class.getName());
+    final static Logger log = Logger.getLogger(LibArgs.class.getName());
 
     final static Map<String, Parser> KNOWN_PARSERS = new HashMap<String, Parser>();
     
@@ -284,10 +283,10 @@ public class LibArgs {
                         param.shortName = arg.single();
                 }
                 if (readMethod != null) {
-                    log.debug("Checking " + param.longName + " for annotations.");
+                    log.fine("Checking " + param.longName + " for annotations.");
                     if (param.shortName == 0 && shortNames.add(param.longName.charAt(0))) {
                         param.shortName = param.longName.charAt(0);
-                        log.debug("Assigning char " + param.shortName + " to " + param.longName);
+                        log.fine("Assigning char " + param.shortName + " to " + param.longName);
                     }
                     if (pd.getPropertyType() == Boolean.TYPE || pd.getPropertyType() == Boolean.class) {
                         param.type = ArgType.SWITCH;
@@ -306,7 +305,7 @@ public class LibArgs {
                 }
 
             } else {
-                log.debug("Skipping " + pd.getName() + " because it isn't writeable.");
+                log.fine("Skipping " + pd.getName() + " because it isn't writeable.");
             }
         }
         return parameters;
@@ -362,7 +361,7 @@ public class LibArgs {
             }
             
         } catch (Exception e) {
-            log.warn("Unable to set argument", e);
+            log.log(Level.WARNING, "Unable to set argument", e);
         }
 
     }
@@ -423,7 +422,7 @@ public class LibArgs {
                             v = propType.getConstructor(String.class).newInstance(value);
                         } catch (Exception e) {
                             // At this point we don't know how to make one of these.
-                            log.warn("Unable to construct or parse " + propType.getName() + " from a string.", e);
+                            log.log(Level.WARNING, "Unable to construct or parse " + propType.getName() + " from a string.", e);
                         }
                     }
                 }

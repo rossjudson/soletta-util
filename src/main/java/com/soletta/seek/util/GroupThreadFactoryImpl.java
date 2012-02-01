@@ -1,8 +1,8 @@
 package com.soletta.seek.util;
 
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.slf4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 final class GroupThreadFactoryImpl implements GroupThreadFactory {
     
@@ -30,7 +30,7 @@ final class GroupThreadFactoryImpl implements GroupThreadFactory {
                 } catch (Exception ex) {
                     if (!ex.getClass().getName().contains("RecycleThread")) {
                         Logger l = exceptionLog != null ? exceptionLog : Threads.log;
-                        l.warn(name + " exception", ex);
+                        l.log(Level.WARNING, name + " exception", ex);
                         ex.printStackTrace();
                     }
                 } finally {

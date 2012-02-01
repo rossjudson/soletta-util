@@ -3,12 +3,11 @@ package com.soletta.seek.util;
 import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
 
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.management.ObjectName;
 import javax.management.StandardMBean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Methods for dealing with finaliztion issues.
  * 
@@ -18,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class LibFinalization {
     private static AtomicReference<FinalizationMonitorThread> monitor = new AtomicReference<FinalizationMonitorThread>();
     private static ObjectName monitorName;
-    static final Logger log = LoggerFactory.getLogger(LibFinalization.class);
+    static final Logger log = Logger.getLogger(LibFinalization.class.getName());
     
     public static void monitorFinalization() {
         
@@ -34,7 +33,7 @@ public class LibFinalization {
                         monitorName = ObjectName.getInstance("seek", "Monitor", "Finalization");
                         getPlatformMBeanServer().registerMBean(new StandardMBean(fmt, FinalizationMonitorMXBean.class, true), monitorName);
                     } catch (Exception e) {
-                        log.warn("Can't register finalization monitor", e);
+                        log.log(Level.WARNING, "Can't register finalization monitor", e);
                     } 
             }
         }
@@ -80,7 +79,7 @@ public class LibFinalization {
                     
                     if (System.currentTimeMillis() - lastMemoryPrint > 60000) {
                         lastMemoryPrint = System.currentTimeMillis();
-                        log.debug(String.format("Free: %,dmb  Max: %,dmb  Total: %,dmb", Runtime.getRuntime()
+                        log.fine(String.format("Free: %,dmb  Max: %,dmb  Total: %,dmb", Runtime.getRuntime()
                             .freeMemory() / 1024 / 1024, Runtime.getRuntime().maxMemory() / 1024 / 1024, Runtime
                             .getRuntime().totalMemory() / 1024 / 1024));
                     }

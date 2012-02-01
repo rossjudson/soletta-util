@@ -7,11 +7,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 import javax.management.NotificationBroadcasterSupport;
 import javax.management.StandardEmitterMBean;
-
-import org.slf4j.Logger;
 
 /**
  * Assists with running a JVM class in a child process.

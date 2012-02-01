@@ -13,13 +13,13 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.management.NotificationBroadcasterSupport;
 import javax.management.ObjectName;
 import javax.management.StandardEmitterMBean;
 import javax.management.StandardMBean;
-
-import org.slf4j.Logger;
 
 public class Launcher implements Callable<Integer>, LauncherMXBean {
 
@@ -141,7 +141,7 @@ public class Launcher implements Callable<Integer>, LauncherMXBean {
 	        return result.get();
 	    } catch (Exception e) {
 	        if (logger != null)
-	            logger.warn("Exception from launched process", e);
+	            logger.log(Level.WARNING, "Exception from launched process", e);
 	        throw e;
 	    } finally {
 	        // cleanup of the process, etc?
@@ -176,7 +176,7 @@ public class Launcher implements Callable<Integer>, LauncherMXBean {
         public void run() {
 
             if (logger != null)
-                logger.debug("Pump startup");
+                logger.fine("Pump startup");
 
             try {
                 byte[] buffer = new byte[16000];
@@ -212,14 +212,14 @@ public class Launcher implements Callable<Integer>, LauncherMXBean {
                         int exitCode = process.get().waitFor();
                         result.set(exitCode);
                         if (logger != null)
-                            logger.debug("Received status code " + exitCode);
+                            logger.fine("Received status code " + exitCode);
                     } catch (InterruptedException e) {
                         result.setException(e);
                     }
 
                 }
                 if (logger != null)
-                    logger.debug("Pump exit");
+                    logger.fine("Pump exit");
             }
         }
 
