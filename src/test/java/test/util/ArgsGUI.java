@@ -1,11 +1,14 @@
 package test.util;
 
-import com.soletta.seek.util.args.ArgException;
+import javax.swing.UIManager;
+
 import com.soletta.seek.util.args.LibArgsGUI;
 
 public class ArgsGUI {
 
-    public static void main(String [] args) throws ArgException {
+    public static void main(String [] args) throws Exception {
+        
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         
         SimpleConfig sc = new SimpleConfig();
         

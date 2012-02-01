@@ -13,6 +13,7 @@ import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
@@ -26,19 +27,22 @@ import javax.swing.event.ChangeListener;
 
 import com.soletta.seek.util.args.LibArgs.Parameter;
 
+/** Creates a simple GUI for a LibArgs program.
+ * 
+ * @author rjudson
+ *
+ */
 public class LibArgsGUI {
 
     private List<Parameter> parameters;
     private Object config;
     private JDialog dialog;
 
-    
     public LibArgsGUI(Object config) throws ArgException {
 
         this.config = config;
         try {
             parameters = LibArgs.introspect(config);
-            
         } catch (IntrospectionException e) {
             throw new ArgException("Unable to introspect " + config.getClass().getName());
         }
@@ -48,11 +52,14 @@ public class LibArgsGUI {
     public JDialog show(boolean modal) {
         dialog = new JDialog();
         dialog.setModal(modal);
-        
         dialog.setTitle("Configure");
         
         JPanel optionPanel = new JPanel(new GridBagLayout());
+        
+        optionPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        
         GridBagConstraints gc = new GridBagConstraints();
+        gc.gridy = 0;
         gc.insets = new Insets(2, 2, 2, 2);
         
         for (Parameter p: parameters) {
@@ -62,6 +69,7 @@ public class LibArgsGUI {
             gc.fill = GridBagConstraints.NONE;
             final JCheckBox set = new JCheckBox(p.longName);
             gc.anchor = GridBagConstraints.BASELINE_LEADING;
+            set.setToolTipText(p.description());
             optionPanel.add(set, gc);
             
             Class<?> ptype = p.pd.getPropertyType();
@@ -90,12 +98,11 @@ public class LibArgsGUI {
             }
             
             comp.setEnabled(false);
-            
             comp.addPropertyChangeListener(new PropertyChangeListener() {
                 
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
-                    System.out.println(evt.getPropertyName() + "\t" + evt.getOldValue() + "\t" + evt.getNewValue());
+                    // System.out.println(evt.getPropertyName() + "\t" + evt.getOldValue() + "\t" + evt.getNewValue());
                 }
             });
             ChangeListener handler = EventHandler.create(ChangeListener.class, comp, "setEnabled", "source.selected");
@@ -111,19 +118,26 @@ public class LibArgsGUI {
 //            });
             
             comp.setToolTipText(p.description());
-            gc.gridwidth = GridBagConstraints.REMAINDER;
+            gc.gridx = 1;
+            gc.weightx = 1;
+            gc.fill = GridBagConstraints.HORIZONTAL;
+            
+            // gc.gridwidth = GridBagConstraints.REMAINDER;
             optionPanel.add(comp, gc);
             PropertyEditor editor = PropertyEditorManager.findEditor(p.pd.getPropertyType());
             if (editor != null) {
                 Object val = editor.getValue();
             }
-            
+
+            gc.fill = GridBagConstraints.NONE;
+            gc.gridx = 0;
             gc.gridy++;
             
         }
 
         dialog.getContentPane().add(optionPanel);
         dialog.pack();
+        dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
         if (modal) {
             dialog.dispose();
