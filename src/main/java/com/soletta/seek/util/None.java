@@ -1,7 +1,6 @@
 package com.soletta.seek.util;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.ListIterator;
 
 /** Partner class to Some<E>, representing no value. It functions as an unmodifiable 
@@ -19,15 +18,19 @@ final public class None<E> extends Maybe<E> {
     
     @SuppressWarnings("rawtypes")
     public final static None NONE = new None<Object>();
+
+    @SuppressWarnings("rawtypes")
+    final static Iter NONE_ITER = new Iter<Object>();
     
     @SuppressWarnings("unchecked")
     public static <T> None<T> none() {
         return (None<T>) NONE;
     }
     
+    @SuppressWarnings("unchecked")
     @Override
     public ListIterator<E> iterator() {
-        return Collections.<E>emptyList().listIterator();
+        return NONE_ITER;
     }
 
     @Override
@@ -70,6 +73,83 @@ final public class None<E> extends Maybe<E> {
         return "None";
     }
     
-    
+    private Object readResolve() {
+        return NONE;
+    }
 
+    static class Iter<E> implements ImmutableListIterator<E>, ListIterator<E> {
+
+        Iter() {
+        }
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public E next() {
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void set(E e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void add(E e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return false;
+        }
+
+        @Override
+        public E previous() {
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public int nextIndex() {
+            return 0;
+        }
+
+        @Override
+        public int previousIndex() {
+            return -1;
+        }
+        
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ImmutableListIterator<E> immutableIterator() {
+        return NONE_ITER;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ImmutableListIterator<E> immutableListIterator() {
+        return NONE_ITER;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public ImmutableListIterator<E> immutableListIterator(int index) {
+        return NONE_ITER;
+    }
+
+    @Override
+    public ImmutableList<E> immutableSubList(int fromIndex, int toIndex) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

@@ -7,7 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 // not complete yet
-public class DualBlockingQueue<T> implements BlockingQueue<T> {
+class DualBlockingQueue<T> implements BlockingQueue<T> {
 
     
     private final BlockingQueue<T> head, tail;

@@ -1,7 +1,8 @@
 package com.soletta.seek.util;
 
+import static java.util.Collections.singletonList;
+
 import java.util.Collection;
-import java.util.Collections;
 import java.util.ListIterator;
 
 /** Counterpart to None<E>, representing an E object.
@@ -26,7 +27,7 @@ final public class Some<E> extends Maybe<E> {
 
     @Override
     public ListIterator<E> iterator() {
-        return Collections.singletonList(value).listIterator();
+        return singletonList(value).listIterator();
     }
 
     @Override
@@ -82,6 +83,95 @@ final public class Some<E> extends Maybe<E> {
     public String toString() {
         return "Some(" + value + ')';
     }
-    
-    
+
+    @Override
+    public ImmutableListIterator<E> immutableIterator() {
+        return new Iter<E>(value, false);
+    }
+
+    @Override
+    public ImmutableListIterator<E> immutableListIterator() {
+        return new Iter<E>(value, false);
+    }
+
+    @Override
+    public ImmutableListIterator<E> immutableListIterator(int index) {
+        if (index < 0 || index > 1)
+            throw new IllegalArgumentException();
+        return new Iter<E>(value, index == 1);
+    }
+
+    @Override
+    public ImmutableList<E> immutableSubList(int fromIndex, int toIndex) {
+        if (fromIndex < 0 || fromIndex > 1 || toIndex < fromIndex || toIndex > 1)
+            throw new IllegalArgumentException();
+        if (fromIndex == toIndex)
+            return None.none();
+        else 
+            return this; 
+    }
+
+    static class Iter<E> implements ImmutableListIterator<E>, ListIterator<E> {
+
+        boolean done;
+        final E val;
+        
+        Iter(E val, boolean done) {
+            this.val = val;
+            this.done = done;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !done;
+        }
+
+        @Override
+        public E next() {
+            if (done)
+                throw new IllegalStateException();
+            else
+                return val;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void set(E e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void add(E e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return done;
+        }
+
+        @Override
+        public E previous() {
+            if (done) {
+                done = false;
+                return val;
+            } else
+                throw new IllegalStateException();
+        }
+
+        @Override
+        public int nextIndex() {
+            return done ? 1 : 0;
+        }
+
+        @Override
+        public int previousIndex() {
+            return done ? 0 : -1;
+        }
+        
+    }
 }
