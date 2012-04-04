@@ -29,8 +29,21 @@ public class LibStream {
      * @return long * @throws IOException
      */
     public static long cat1(InputStream in, OutputStream out) throws IOException {
+        return cat1(in, out, 16 * 1024);
+    }
+
+    /**
+     * Copy everything from in to out in an efficient way, possibly multi-threaded, without closing the streams.
+     * 
+     * @param in
+     * @param out
+     * @param bufferSize
+     *            Number of bytes in transfer buffer.
+     * @return long * @throws IOException
+     */
+    public static long cat1(InputStream in, OutputStream out, int bufferSize) throws IOException {
         long count = 0;
-        byte[] buffer = new byte[16 * 1024];
+        byte[] buffer = new byte[bufferSize];
         int read = in.read(buffer);
         while (read >= 0) {
             count += read;

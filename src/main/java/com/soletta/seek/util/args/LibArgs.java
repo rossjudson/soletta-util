@@ -136,24 +136,39 @@ public class LibArgs {
      * Create a LibArgs object and process the given arguments with it. This is a convenient method to use if you do not
      * need to customize any of LibArgs' handling of types.
      * 
-     * @param config
-     * @param args
+     * @param config The java bean object to be configured, based on the arguments.
+     * @param args An array of arguments to parse.
      * @return Set<String>
      * @throws ArgException
      */
     public static Set<String> process(Object config, String... args) throws ArgException {
-        return new LibArgs().processArguments(config, args);
+        return new LibArgs().processArguments(false, config, args);
+    }
+
+    /**
+     * Create a LibArgs object and process the given arguments with it. This is a convenient method to use if you do not
+     * need to customize any of LibArgs' handling of types.
+     * 
+     * @param relaxed If true, arguments that don't match properties will be ignored. Otherwise, an exception will be thrown.
+     * @param config The java bean object to be configured, based on the arguments.
+     * @param args An array of arguments to parse.
+     * @return Set<String>
+     * @throws ArgException
+     */
+    public static Set<String> process(boolean relaxed, Object config, String... args) throws ArgException {
+        return new LibArgs().processArguments(relaxed, config, args);
     }
 
     /**
      * Examines the config object using introspection, then sets its properties based on the arguments that are passed
      * in.
      * 
-     * @param config
-     * @param args
+     * @param relaxed If true, arguments that don't match properties will be ignored. Otherwise, an exception will be thrown.
+     * @param config The java bean object to be configured, based on the arguments.
+     * @param args An array of arguments to parse.
      * @return A set with the names of the arguments that were processed. * @throws ArgException
      */
-    public Set<String> processArguments(Object config, String... args) throws ArgException {
+    public Set<String> processArguments(boolean relaxed, Object config, String... args) throws ArgException {
 
         assert config != null;
         assert args != null;
@@ -203,7 +218,8 @@ public class LibArgs {
                         }
 
                     if (!processed) {
-                        throw new ArgException("Unknown argument: " + a);
+                        if (!relaxed) 
+                            throw new ArgException("Unknown argument: " + a);
                     }
                 } else {
                     boolean processed = false;
